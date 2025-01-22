@@ -1,4 +1,5 @@
-# Social Media Project
+# Nifty
+
 
 Dự án mạng xã hội sử dụng MERN Stack (MongoDB, Express, React, Node.js)
 
