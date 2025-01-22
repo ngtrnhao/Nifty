@@ -20,7 +20,7 @@ bash
 cd backend
 npm install
 npm run dev
-
+```
 ## Công nghệ sử dụng
 
 - Frontend: React, Redux, Material-UI, Tailwind CSS
