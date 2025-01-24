@@ -1,11 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../../services/authService";
 
+
+export const registerUser = createAsyncThunk(
+    'auth/register',
+    async(userData,{rejectWithValue}) =>{
+        try{
+            const data = await authService.register(userData);
+            return data;
+        }catch(error){
+            return rejectWithValue(error.message);
+        }
+    }
+)
 export const loginUser = createAsyncThunk(
     'auth/login',
     async (credentials,{rejectWithValue}) =>{
         try{
-            const data = await authService.login(credentials);
+            const data = await authService.login(credentials); // credentials : thông tin xác thực 
             return data;
         }catch(error) {
             return rejectWithValue(error.messagee);
@@ -49,6 +61,17 @@ const authSlice = createSlice({
         .addCase(loginUser.rejected,(state,action) =>{
             state.loading = false;
             state.error= action.payload;
+        })
+        .addCase(registerUser.pending,(state) =>{
+            state.loading=true;
+            state.error=null;
+        })
+        .addCase(registerUser.fulfilled,(state,action) =>{
+            state.loading = false;
+        })
+        .addCase(registerUser.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
         })
     }
 })
