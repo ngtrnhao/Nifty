@@ -1,11 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        lobster: ['Lobster', 'cursive'],
+        gryphen: ['Qwitcher Grypen'],
+        poppins: ['Poppins'],
+        afacad: ['Afacad Flux'],
+        oswald: ['Oswald'],
+      },
+    },
   },
   plugins: [],
-}
-
+};

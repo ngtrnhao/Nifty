@@ -1,5 +1,5 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { logout } from '../../store/slices/authSlice';
 
@@ -13,11 +13,11 @@ const Navbar = () => {
   };
   return (
     <nav className="bg-white shadow-lg">
-      <div className="max-w-6x1 mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/*Logo*/}
           <Link to="/" className="flex items-center space-x-3">
-            <span className="text-x1 font-bold text-grey-800">Nifty</span>
+            <span className="text-xl font-bold text-gray-800">Nifty</span>
           </Link>
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (

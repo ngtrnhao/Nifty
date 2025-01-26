@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <Layout>
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-grey-900 mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Chào mừng đến với Nifty
         </h1>
         <p className="text-xl text-gray-600">

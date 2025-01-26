@@ -22,7 +22,13 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'no-unused-vars': 'warn',
-    'no-console': 'off', // nếu muốn thay đổi tìm console còn sót khi production thì đổi thành warn
+    'no-console': 'warn',
+    'no-undef': 'error',
+    'no-duplicate-imports': 'error',
+    'no-multiple-empty-lines': ['error', { max: 1 }],
+    'no-trailing-spaces': 'error',
+    'eqeqeq': ['error', 'always'],
+    'semi': ['error', 'always']
   },
   settings: {
     react: {

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginUser } from '../../store/slices/authSlice';
 import { validateLoginInput } from '../../utils/validation';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Layout from '../layout/MainLayout';
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="ground relative w-full flex justify-center py-2 px-4 border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="group relative w-full flex justify-center py-2 px-4 border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
@@ -112,6 +113,16 @@ const Login = () => {
               </button>
             </div>
           </form>
+          <div className="flex items-center justify-between mt-4">
+            <div className="text-sm">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Quên mật khẩu
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

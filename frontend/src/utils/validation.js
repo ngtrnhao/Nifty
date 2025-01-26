@@ -52,3 +52,7 @@ export const validateLoginInput = (formData) => {
     errors,
   };
 };
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
