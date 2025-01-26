@@ -1,0 +1,15 @@
+node_modules
+build
+dist
+coverage
+.env
+.prettierrc
+.prettierignore
+.eslintignore
+.eslintrc.js
+.gitignore
+.env
+.env.local
+.env.development
+.env.production
+.env.test
