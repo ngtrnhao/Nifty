@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginUser } from '../../store/slices/authSlice';
+import { validateLoginInput } from '../../utils/validation';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Layout from '../layout/MainLayout';
 const Login = () => {
@@ -14,9 +15,14 @@ const Login = () => {
     email: '',
     password: '',
   });
-
+  const [formErrors, setFormErrors] = useState({});
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { isValid, errors } = validateLoginInput(formData);
+    if (!isValid) {
+      setFormErrors(errors);
+      return;
+    }
     try {
       await dispatch(loginUser(formData)).unwrap();
       toast.success('Đăng nhập thành công');
@@ -50,13 +56,21 @@ const Login = () => {
                   name="email"
                   type="email"
                   required
-                  className="apperance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 forcus:border-indigo-5 focus:z-10 sm:text-sm "
+                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+                    formErrors.email ? 'border-red-500' : 'border-gray-300'
+                  } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Email"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    setFormErrors({ ...formErrors, email: '' });
+                  }}
                 />
+                {formErrors.email && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {formErrors.email}
+                  </p>
+                )}
               </div>
               <div>
                 <input
@@ -64,13 +78,21 @@ const Login = () => {
                   name="password"
                   type="password"
                   required
-                  className="apperance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+                    formErrors.password ? 'border-red-500' : 'border-gray-300'
+                  } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Mật Khẩu"
                   value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                    setFormErrors({ ...formErrors, password: '' });
+                  }}
                 />
+                {formErrors.password && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {formErrors.password}
+                  </p>
+                )}
               </div>
             </div>
             <div>
