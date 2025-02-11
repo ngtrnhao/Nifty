@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { logout } from '../../store/slices/authSlice';
+import Logo from '../common/LogoNifty';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -16,8 +17,13 @@ const Navbar = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/*Logo*/}
-          <Link to="/" className="flex items-center space-x-3">
-            <span className="text-xl font-bold text-gray-800">Nifty</span>
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="transform transition-transform duration-300 ease-in-out hover:scale-110">
+              <Logo />
+            </div>
+            <span className="text-xl font-bold tracking-wider bg-gradient-to-r from-indigo-600 to-purple-500 bg-clip-text text-transparent">
+              NIFTY
+            </span>
           </Link>
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (

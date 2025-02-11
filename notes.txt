@@ -1,0 +1,58 @@
+1.Di chuyển và chỉnh sửa:
+
+Alt + ↑/↓: Di chuyển dòng lên/xuống
+Shift + Alt + ↑/↓: Copy dòng lên/xuống
+Ctrl + L: Chọn dòng hiện tại
+Ctrl + D: Chọn từ tiếp theo giống từ đang chọn
+Ctrl + Shift + K: Xóa dòng
+Ctrl + Enter: Thêm dòng mới bên dưới
+Ctrl + Shift + Enter: Thêm dòng mới bên trên
+3. Multi-cursor và Selection:
+Alt + Click: Thêm con trỏ
+Ctrl + Alt + ↑/↓: Thêm con trỏ lên/xuống
+Shift + Alt + I: Thêm con trỏ vào cuối mỗi dòng đã chọn
+Ctrl + Shift + L: Chọn tất cả các từ giống từ đang chọn
+4.Code folding (Thu gọn code):
+Ctrl + Shift + [ : Thu gọn vùng code
+Ctrl + Shift + ] : Mở rộng vùng code
+Ctrl + K Ctrl + 0: Thu gọn tất cả
+Ctrl + K Ctrl + J: Mở rộng tất cả
+5.Terminal và Panel:
+Ctrl + `: Mở/đóng terminal
+Ctrl + B: Ẩn/hiện sidebar
+Ctrl + J: Ẩn/hiện panel dưới
+Ctrl + Shift + M: Mở Problems panel
+6.File và Navigation:
+Ctrl + P: Tìm file nhanh
+Ctrl + Tab: Chuyển giữa các file đang mở
+Ctrl + W: Đóng file hiện tại
+Ctrl + Shift + T: Mở lại file vừa đóng
+Ctrl + G: Đi đến dòng số
+7.Code Intelligence:
+F12: Đi đến định nghĩa
+Alt + F12: Peek định nghĩa
+Shift + F12: Hiển thị references
+F2: Rename symbol
+Ctrl + Space: Trigger suggestions
+Ctrl + Shift + Space: Trigger parameter hints
+8.Editor Layout:
+Ctrl + \: Split editor
+Ctrl + 1/2/3: Focus vào group editor 1/2/3
+Ctrl + K V: Split editor và mở preview markdown
+9.Git:
+Ctrl + Shift + G: Mở Git panel
+Ctrl + Enter: Commit (trong Git panel)
+10.Format Code:
+Shift + Alt + F: Format toàn bộ document
+Ctrl + K Ctrl + F: Format vùng code đã chọn
+Alt + Shift + O: Organize imports
+11.Debug:
+F5: Start/Continue debug
+F9: Toggle breakpoint
+F10: Step over
+F11: Step into
+Shift + F11: Step out
+12.Intellisense và Snippets:
+Ctrl + Space: Trigger suggestions
+Tab: Chọn suggestion/snippet
+Ctrl + Shift + P: Mở Command Palette

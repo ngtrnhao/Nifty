@@ -116,10 +116,10 @@ const Login = () => {
           <div className="flex items-center justify-between mt-4">
             <div className="text-sm">
               <Link
-                to="/forgot-password"
+                to="/find-account"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
-                Quên mật khẩu
+                Quên tài khoản?
               </Link>
             </div>
           </div>

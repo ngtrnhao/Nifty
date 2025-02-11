@@ -1,9 +1,8 @@
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
 
   if (loading) {
     return (
@@ -11,9 +10,6 @@ const ProtectedRoute = ({ children }) => {
         <LoadingSpinner />
       </div>
     );
-  }
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
   }
   return children;
 };
