@@ -3,6 +3,7 @@ import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import FindAccount from '../components/auth/FindAccount';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
+import ResetPassword from '../components/auth/ResetPassword';
 import Home from '../pages/Home';
 
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: '/find-account',
     element: <FindAccount />,
+  },
+  {
+    path: '/reset-password/:userId',
+    element: <ResetPassword />,
   },
 ]);
 

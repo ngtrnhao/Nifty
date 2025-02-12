@@ -1,58 +1,48 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../common/LoadingSpinner';
+import { toast } from 'react-toastify';
+import { findAccount } from '../../store/slices/authSlice';
 import { validateEmail } from '../../utils/validation';
-// import api from '../../utils/api';
+import LoadingSpinner from '../common/LoadingSpinner';
 import Layout from '../layout/MainLayout';
 
 const FindAccount = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error, foundAccount } = useSelector((state) => state.auth);
+
   const [searchInput, setSearchInput] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  //   const [foundAccount, setFoundAccount] = useState(null);
   const [step, setStep] = useState(1);
 
-  // Thêm dữ liệu mẫu cho foundAccount
-  const [foundAccount, setFoundAccount] = useState({
-    _id: '123',
-    name: 'Nguyễn Văn A',
-    email: 'nguyenvana@example.com',
-  });
-  //   const [step, setStep] = useState(2);
   const handleSearch = async (e) => {
     e.preventDefault();
-    setError('');
 
     if (!validateEmail(searchInput)) {
-      setError('Email không hợp lệ');
+      toast.error('Email không hợp lệ');
       return;
     }
 
-    setLoading(true);
-    // try {
-    //   const response = await api.post('/auth/find-account', {
-    //     email: searchInput,
-    //   });
-    //   setFoundAccount(response.data.user);
-    //   setStep(2);
-    // } catch (err) {
-    //   setError('Không tìm thấy tài khoản trùng khớp.');
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      await dispatch(findAccount(searchInput)).unwrap();
+      setStep(2);
+    } catch (err) {
+      toast.error(err.message || 'Không tìm thấy tài khoản trùng khớp.');
+    }
   };
+
   const handleContinue = () => {
-    navigate(`/reset-password/${foundAccount._id}`);
+    if (foundAccount?.user?._id) {
+      navigate(`/reset-password/${foundAccount.user._id}`);
+    }
   };
+
   const handleTryAgain = () => {
     setStep(1);
     setSearchInput('');
-    setFoundAccount(null);
-    setError('');
   };
 
-  if (step === 2 && foundAccount) {
+  if (step === 2 && foundAccount?.user) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -64,14 +54,16 @@ const FindAccount = () => {
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
                   <span className="text-2xl font-bold text-gray-600">
-                    {foundAccount.name.charAt(0).toUpperCase()}
+                    {foundAccount.user.name?.charAt(0)?.toUpperCase() || '?'}
                   </span>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900 ">
-                    {foundAccount.name}
+                  <p className="font-medium text-gray-900">
+                    {foundAccount.user.name}
                   </p>
-                  <p className="text-sm text-gray-500">{foundAccount.email}</p>
+                  <p className="text-sm text-gray-500">
+                    {foundAccount.user.email}
+                  </p>
                 </div>
               </div>
             </div>
