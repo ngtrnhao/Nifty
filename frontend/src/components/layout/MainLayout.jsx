@@ -1,14 +1,14 @@
 import Navbar from './Navbar';
 import Footer from './Footer';
-const MainLayout = ({ children }) => {
+
+const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="max-w-7x1 mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {children}
-      </main>
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );
 };
-export default MainLayout;
+
+export default Layout;
