@@ -2,16 +2,15 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { loginUser } from '../../store/slices/authSlice';
+import { loginUser, googleLogin } from '../../store/slices/authSlice';
 import { validateLoginInput } from '../../utils/validation';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Layout from '../layout/MainLayout';
-
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
-
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -34,6 +33,21 @@ const Login = () => {
       );
       console.error('Login failed:', err);
     }
+  };
+  const handleGoogleLoginSuccess = async (respone) => {
+    try {
+      await dispatch(googleLogin({ token: respone.credential })).unwrap();
+      toast.success('Đăng nhập bằng Google thành công');
+      navigate('/');
+    } catch (err) {
+      toast.error(
+        err.message || 'Đăng nhập bằng Google thất bại, vui lòng thử lại !'
+      );
+      console.log('Google login failed');
+    }
+  };
+  const handleGoogleLoginFailed = () => {
+    toast.error('Đăng nhập bằng Google thất bại, vui lòng thử lại!');
   };
   return (
     <Layout>
@@ -122,6 +136,12 @@ const Login = () => {
                 Quên tài khoản?
               </Link>
             </div>
+          </div>
+          <div className="mt-6 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginFailed}
+            />
           </div>
         </div>
       </div>
