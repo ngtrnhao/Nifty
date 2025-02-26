@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { registerUser } from '../../store/slices/authSlice';
+import {
+  registerUser,
+  sendVerificationEmail,
+} from '../../store/slices/authSlice';
 import { validateRegisterInput } from '../../utils/validation';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Layout from '../layout/MainLayout';
@@ -19,6 +22,7 @@ const Register = () => {
     confirmPassword: '',
   });
   const [formErrors, setFormErrors] = useState({});
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { isValid, errors } = validateRegisterInput(formData);
@@ -28,8 +32,9 @@ const Register = () => {
     }
     try {
       await dispatch(registerUser(formData)).unwrap();
+      await dispatch(sendVerificationEmail(formData.email)).unwrap();
       toast.success('Đăng ký thành công');
-      navigate('/login');
+      navigate('/check-email');
     } catch (err) {
       toast.error(err.message || 'Đăng ký thất bại');
       console.error('Register failed:', err);

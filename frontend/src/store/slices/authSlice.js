@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import authService from '../../services/authService';
+import { authService } from '../../services/authService';
 
 export const registerUser = createAsyncThunk(
   'auth/register',
@@ -59,6 +59,28 @@ export const googleLogin = createAsyncThunk(
     }
   }
 );
+export const sendVerificationEmail = createAsyncThunk(
+  '/auth/sendVerificationEmail',
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await authService.sendVerificationEmail(email);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const verifyEmail = createAsyncThunk(
+  'auth/verifyEmail',
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await authService.verifyEmail(token);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const initialState = {
   user: null,
@@ -67,6 +89,9 @@ const initialState = {
   loading: false,
   error: null,
   foundAccount: null,
+  emailVerified: false,
+  verificationEmailSent: false,
+  verificationError: null,
 };
 
 const authSlice = createSlice({
@@ -148,6 +173,21 @@ const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(sendVerificationEmail.pending, (state) => {
+        state.loading = true;
+        state.verificationEmailSent = null;
+      })
+      .addCase(sendVerificationEmail.fulfilled, (state) => {
+        state.loading = false;
+        state.verificationEmailSent = true;
+      })
+      .addCase(sendVerificationEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.verificationError = action.payload;
+      })
+      .addCase(verifyEmail.fulfilled, (state) => {
+        state.emailVerified = true;
       });
   },
 });

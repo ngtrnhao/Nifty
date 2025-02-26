@@ -15,7 +15,7 @@ const mockUsers = [
   },
 ];
 
-const authService = {
+export const authService = {
   login: async (credentials) => {
     try {
       const response = await api.post('/auth/login', credentials);
@@ -72,6 +72,21 @@ const authService = {
       throw error.response.data;
     }
   },
+  sendVerificationEmail: async (email) => {
+    try {
+      const response = await api.post('auth/send-verification', { email });
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
+  verifyEmail: async (token) => {
+    try {
+      const response = await api.post(`/auth/verify-email/${token}`);
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
 };
-
-export default authService;
+// export default authService;

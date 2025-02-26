@@ -4,6 +4,8 @@ import Register from '../components/auth/Register';
 import FindAccount from '../components/auth/FindAccount';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 import ResetPassword from '../components/auth/ResetPassword';
+import EmailVerication from '../components/auth/EmailVerification';
+import CheckEmail from '../components/auth/CheckEmail';
 import Home from '../pages/Home';
 
 const router = createBrowserRouter([
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
   {
     path: '/reset-password/:userId',
     element: <ResetPassword />,
+  },
+  {
+    path: '/verify-email/:token',
+    element: <EmailVerication />,
+  },
+  {
+    path: '/check-email',
+    element: <CheckEmail />,
   },
 ]);
 
