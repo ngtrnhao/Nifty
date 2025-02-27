@@ -5,36 +5,36 @@ dotenv.config();
 
 const { Pool } = pg;
 
-// Thêm log để debug
-console.log('Database Config:', {
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+// Log ra giá trị biến môi trường DATABASE_URL để chắc chắn nó đã được load
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+
+// Tạo pool kết nối
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Nếu RDS yêu cầu SSL
+  },
 });
 
-const postgresPool = new Pool({
-  user: process.env.DB_USER || 'postgres', // Thêm giá trị mặc định
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'db_socail_media',
-  password: String(process.env.DB_PASSWORD),
-  port: parseInt(process.env.DB_PORT, 10) || 5432,
-});
+// Hàm kiểm tra kết nối
+async function testConnection() {
+  console.log('Đang thử kết nối đến PostgreSQL...');
+  try {
+    const client = await pool.connect();
+    console.log('Kết nối RDS PostgreSQL thành công!');
 
-// Thêm log để debug
-console.log('Attempting to connect with:', {
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-});
+    // Thực hiện truy vấn đơn giản
+    const res = await client.query('SELECT NOW() AS current_time');
+    console.log('Kết quả truy vấn:', res.rows[0]);
 
-//Kiểm tra kết nối
-postgresPool.connect((err) => {
-  if (err) {
-    console.error('Lỗi kết nối database: ', err);
-  } else {
-    console.log('Kết nối database thành công');
+    // Đóng kết nối
+    client.release();
+  } catch (err) {
+    console.error('Lỗi kết nối:', err);
   }
-});
-export default postgresPool;
+}
+
+// Gọi hàm testConnection khi file được chạy
+testConnection();
+
+export default pool;
