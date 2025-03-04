@@ -16,9 +16,10 @@ const Register = () => {
   const { loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
+    username: '',
+    full_name: '',
     confirmPassword: '',
   });
   const [formErrors, setFormErrors] = useState({});
@@ -26,6 +27,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { isValid, errors } = validateRegisterInput(formData);
+
+    console.log('Form data being sent:', formData);
+
     if (!isValid) {
       setFormErrors(errors);
       return;
@@ -40,6 +44,13 @@ const Register = () => {
       console.error('Register failed:', err);
     }
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setFormErrors({ ...formErrors, [name]: '' });
+  };
+
   return (
     <Layout>
       <div className="min-h-screen flex items-center justify-center">
@@ -56,20 +67,19 @@ const Register = () => {
             <div className="rounded-md shadow-sm -space-y-px">
               <input
                 type="text"
-                name="name"
+                name="full_name"
                 required
                 className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                  formErrors.name ? 'border-red-500' : 'border-gray-300'
+                  formErrors.full_name ? 'border-red-500' : 'border-gray-300'
                 } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Họ và tên"
-                value={formData.name}
-                onChange={(e) => {
-                  setFormData({ ...formData, name: e.target.value });
-                  setFormErrors({ ...formErrors, name: '' });
-                }}
+                value={formData.full_name}
+                onChange={handleChange}
               ></input>
-              {formErrors.name && (
-                <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
+              {formErrors.full_name && (
+                <p className="mt-1 text-sm text-red-500">
+                  {formErrors.full_name}
+                </p>
               )}
               <div>
                 <input
@@ -82,14 +92,30 @@ const Register = () => {
                   } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Email"
                   value={formData.email}
-                  onChange={(e) => {
-                    setFormData({ ...formData, email: e.target.value });
-                    setFormErrors({ ...formErrors, email: '' });
-                  }}
+                  onChange={handleChange}
                 />
                 {formErrors.email && (
                   <p className="mt-1 text-sm text-red-500">
                     {formErrors.email}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+                    formErrors.username ? 'border-red-500' : 'border-gray-300'
+                  } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                  placeholder="Tên người dùng"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+                {formErrors.username && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {formErrors.username}
                   </p>
                 )}
               </div>
@@ -104,10 +130,7 @@ const Register = () => {
                   } placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Mật Khẩu"
                   value={formData.password}
-                  onChange={(e) => {
-                    setFormData({ ...formData, password: e.target.value });
-                    setFormErrors({ ...formErrors, password: '' });
-                  }}
+                  onChange={handleChange}
                 />
                 {formErrors.password && (
                   <p className="mt-1 text-sm text-red-500">
@@ -128,13 +151,7 @@ const Register = () => {
                   } placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                   placeholder="Nhập lại mật khẩu"
                   value={formData.confirmPassword}
-                  onChange={(e) => {
-                    setFormData({
-                      ...formData,
-                      confirmPassword: e.target.value,
-                    });
-                    setFormErrors({ ...formErrors, confirmPassword: '' });
-                  }}
+                  onChange={handleChange}
                 ></input>
                 {formErrors.confirmPassword && (
                   <p className="mt-1 text-sm text-red-500">

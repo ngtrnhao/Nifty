@@ -88,5 +88,29 @@ export const authService = {
       throw error.response.data;
     }
   },
+  deleteAccount: async () => {
+    try {
+      const response = await api.delete('/auth/delete-account');
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
+  restoreAccount: async (userId) => {
+    try {
+      const response = await api.post(`/auth/restore-account/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
+  permanentlyDeleteAccount: async (userId) => {
+    try {
+      const response = await api.delete(`/auth/permanently-delete/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
 };
 // export default authService;

@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import mongoDBConnection from './patterns/singleton/MongoDBConnection.js';
 import postgreSQLConnection from './patterns/singleton/PostgreSQLConnection.js';
+import cors from 'cors';
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 2002;
@@ -10,6 +12,12 @@ const PORT = process.env.PORT || 2002;
 console.log('Checking environment variables:');
 console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Defined' : 'Undefined');
 console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Defined' : 'Undefined');
+
+app.use(cors());
+app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
   try {

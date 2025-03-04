@@ -6,18 +6,20 @@ class PostgreSQLConnection {
     if (PostgreSQLConnection.instance) {
       return PostgreSQLConnection.instance;
     }
-    
+
     if (!process.env.DATABASE_URL) {
-      throw new Error('DATABASE_URL không được định nghĩa trong biến môi trường');
+      throw new Error(
+        'DATABASE_URL không được định nghĩa trong biến môi trường'
+      );
     }
-    
+
     this.pool = new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false,
       },
     });
-    
+
     this._isConnected = false;
     PostgreSQLConnection.instance = this;
   }
@@ -65,4 +67,5 @@ class PostgreSQLConnection {
   }
 }
 
+const postgreSQLConnection = new PostgreSQLConnection();
 export default new PostgreSQLConnection();

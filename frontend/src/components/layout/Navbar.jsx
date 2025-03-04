@@ -28,7 +28,9 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <span className="text-gray-700">Xin chào, {user?.name}</span>
+                <span className="text-gray-700">
+                  Xin chào, {user?.username}
+                </span>
                 <button
                   onClick={handleLogout}
                   className="py-2 px-4  bg-red-600 text-white rounded-lg hover:bg-red-700"
