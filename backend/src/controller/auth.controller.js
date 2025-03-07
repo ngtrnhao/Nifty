@@ -109,7 +109,7 @@ class AuthController {
       }
 
       await UserModel.updateVerificationStatus(user.id, true);
-      res.json({ message: 'Xác thực email thành công' });
+      res.sendStatus(200);
     } catch (error) {
       res.status(400).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
     }

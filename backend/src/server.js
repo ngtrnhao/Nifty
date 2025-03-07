@@ -11,7 +11,10 @@ const PORT = process.env.PORT || 2002;
 // Kiểm tra biến môi trường
 console.log('Checking environment variables:');
 console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Defined' : 'Undefined');
-console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Defined' : 'Undefined');
+console.log(
+  'DATABASE_URL:',
+  process.env.DATABASE_URL ? 'Defined' : 'Undefined'
+);
 
 app.use(cors());
 app.use(express.json());
@@ -21,25 +24,27 @@ app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
   try {
-    // Kết nối databases
     await Promise.all([
       mongoDBConnection.connect(),
-      postgreSQLConnection.connect()
+      postgreSQLConnection.connect(),
     ]);
 
-    // Test route để kiểm tra kết nối
     app.get('/test-db', async (req, res) => {
       try {
-        const pgPool = postgreSQLConnection.getPool();
-        const pgResult = await pgPool.query('SELECT NOW()');
-        
+        const supabase = postgreSQLConnection.getClient();
+        const { data, error } = await supabase.from('users').select('count');
+
+        if (error) throw error;
+
         res.json({
           postgresql: {
             status: 'Kết nối thành công',
-            timestamp: pgResult.rows[0].now,
+            userCount: data[0].count,
           },
           mongodb: {
-            status: mongoDBConnection.isConnected() ? 'Kết nối thành công' : 'Chưa kết nối',
+            status: mongoDBConnection.isConnected()
+              ? 'Kết nối thành công'
+              : 'Chưa kết nối',
           },
         });
       } catch (err) {
@@ -64,7 +69,7 @@ process.on('SIGINT', async () => {
   try {
     await Promise.all([
       mongoDBConnection.disconnect(),
-      postgreSQLConnection.disconnect()
+      postgreSQLConnection.disconnect(),
     ]);
     process.exit(0);
   } catch (error) {
