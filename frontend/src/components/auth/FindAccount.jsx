@@ -54,12 +54,13 @@ const FindAccount = () => {
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
                   <span className="text-2xl font-bold text-gray-600">
-                    {foundAccount.user.name?.charAt(0)?.toUpperCase() || '?'}
+                    {foundAccount.user.full_name?.charAt(0)?.toUpperCase() ||
+                      '?'}
                   </span>
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">
-                    {foundAccount.user.name}
+                    {foundAccount.user.full_name}
                   </p>
                   <p className="text-sm text-gray-500">
                     {foundAccount.user.email}

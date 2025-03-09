@@ -1,19 +1,19 @@
 import api from './api';
 
-const mockUsers = [
-  {
-    _id: '1',
-    name: 'Nguyễn Văn A',
-    email: 'nguyenvana@gmail.com',
-    password: '123456',
-  },
-  {
-    _id: '2',
-    name: 'Trần Thị B',
-    email: 'tranthib@gmail.com',
-    password: '123456',
-  },
-];
+// const mockUsers = [
+//   {
+//     _id: '1',
+//     name: 'Nguyễn Văn A',
+//     email: 'nguyenvana@gmail.com',
+//     password: '123456',
+//   },
+//   {
+//     _id: '2',
+//     name: 'Trần Thị B',
+//     email: 'tranthib@gmail.com',
+//     password: '123456',
+//   },
+// ];
 
 export const authService = {
   login: async (credentials) => {
@@ -39,27 +39,12 @@ export const authService = {
   },
 
   findAccount: async (email) => {
-    // try {
-    //   const response = await api.post('/ayth/find-account', { email });
-    //   return response.data;
-    // } catch (error) {
-    //   throw error.response.data;
-    // }
-    // Giả lập API call
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const user = mockUsers.find((u) => u.email === email);
-        if (user) {
-          resolve({ user });
-        } else {
-          reject({
-            response: {
-              data: { message: 'Không tìm thấy tài khoản với email này' },
-            },
-          });
-        }
-      }, 1000); // Giả lập delay 1s
-    });
+    try {
+      const response = await api.post('/auth/find-account', { email });
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
   },
 
   resetPassword: async (userId, password) => {
@@ -113,4 +98,4 @@ export const authService = {
     }
   },
 };
-// export default authService;
+export default authService;

@@ -7,6 +7,8 @@ import { validateLoginInput } from '../../utils/validation';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Layout from '../layout/MainLayout';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import PasswordInput from '../common/PasswordInput';
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,26 +90,17 @@ const Login = () => {
                 )}
               </div>
               <div>
-                <input
+                <PasswordInput
                   id="password"
                   name="password"
-                  type="password"
-                  required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                    formErrors.password ? 'border-red-500' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                  placeholder="Mật Khẩu"
                   value={formData.password}
                   onChange={(e) => {
                     setFormData({ ...formData, password: e.target.value });
                     setFormErrors({ ...formErrors, password: '' });
                   }}
+                  placeholder="Mật Khẩu"
+                  error={formErrors.password}
                 />
-                {formErrors.password && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {formErrors.password}
-                  </p>
-                )}
               </div>
             </div>
             <div>
