@@ -5,7 +5,7 @@ const supabase = postgreSQLConnection.getClient();
 
 class UserModel {
   static async createUser(userData) {
-    const { username, email, password, full_name } = userData;
+    const { username, email, password, full_name, role } = userData;
 
     // Kiểm tra các trường bắt buộc
     if (!username || !email || !password) {
@@ -25,6 +25,7 @@ class UserModel {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const userRole = role || 'user';
     const { data, error } = await supabase
       .from('users')
       .insert([
@@ -35,9 +36,10 @@ class UserModel {
           full_name: full_name || '',
           is_verified: false,
           is_active: true,
+          role: userRole,
         },
       ])
-      .select('id, username, email, full_name')
+      .select('id, username, email, full_name, role')
       .maybeSingle();
 
     if (error) throw error;
@@ -84,6 +86,14 @@ class UserModel {
       .update({ password: hashedPassword })
       .eq('id', userId);
 
+    if (error) throw error;
+    return true;
+  }
+  static async updateUserRole(userId, newRole) {
+    const { error } = await supabase
+      .from('users')
+      .update({ role: newRole })
+      .eq('id', userId);
     if (error) throw error;
     return true;
   }
