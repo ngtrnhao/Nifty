@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import UserModel from '../models/postgresql/user.model.js';
 import { emailService } from '../utils/email.js';
 import dotenv from 'dotenv';
-import { validateRegisterData, validateLoginData, validateEmailOnly, validatePasswordReset } from '../utils/validation.js';
+import { validateRegisterData } from '../utils/validation.js';
 
 dotenv.config();
 
@@ -15,9 +15,9 @@ class AuthController {
       // Sử dụng validation
       const validation = validateRegisterData({ email, password, username });
       if (!validation.isValid) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: 'Dữ liệu không hợp lệ',
-          errors: validation.errors 
+          errors: validation.errors,
         });
       }
 
@@ -58,20 +58,20 @@ class AuthController {
       res.status(500).json({ message: error.message });
     }
   }
-  
+
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      
+
       // Sử dụng validation
       const validation = validateLoginData({ email, password });
       if (!validation.isValid) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: 'Dữ liệu không hợp lệ',
-          errors: validation.errors 
+          errors: validation.errors,
         });
       }
-      
+
       const user = await UserModel.findByEmail(email);
 
       if (!user) {
@@ -110,7 +110,7 @@ class AuthController {
       res.status(500).json({ message: error.message });
     }
   }
-  
+
   async verifyEmail(req, res) {
     try {
       const { token } = req.params;
@@ -127,20 +127,20 @@ class AuthController {
       res.status(400).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
     }
   }
-  
+
   async sendVerificationEmail(req, res) {
     try {
       const { email } = req.body;
-      
+
       // Sử dụng validation
       const validation = validateEmailOnly({ email });
       if (!validation.isValid) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: 'Dữ liệu không hợp lệ',
-          errors: validation.errors 
+          errors: validation.errors,
         });
       }
-      
+
       const user = await UserModel.findByEmail(email);
 
       if (!user) {
@@ -158,20 +158,20 @@ class AuthController {
       res.status(500).json({ message: error.message });
     }
   }
-  
+
   async findAccount(req, res) {
     try {
       const { email } = req.body;
-      
+
       // Sử dụng validation
       const validation = validateEmailOnly({ email });
       if (!validation.isValid) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: 'Dữ liệu không hợp lệ',
-          errors: validation.errors 
+          errors: validation.errors,
         });
       }
-      
+
       const user = await UserModel.findByEmail(email);
 
       if (!user) {
@@ -190,18 +190,18 @@ class AuthController {
       res.status(500).json({ message: error.message });
     }
   }
-  
+
   async resetPassword(req, res) {
     try {
       const { userId } = req.params;
       const { password } = req.body;
-      
+
       // Sử dụng validation
       const validation = validatePasswordReset({ password });
       if (!validation.isValid) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: 'Dữ liệu không hợp lệ',
-          errors: validation.errors 
+          errors: validation.errors,
         });
       }
 
