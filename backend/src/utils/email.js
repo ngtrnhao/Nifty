@@ -98,20 +98,20 @@ class EmailService {
 export const emailService = new EmailService();
 
 // Hàm tương thích với code hiện tại
-export const sendEmail = async ({ to, subject, text }) => {
-    const mailOptions = {
-        from: process.env.GMAIL_USER,
-        to: to,
-        subject: subject,
-        text: text
-    };
+// export const sendEmail = async ({ to, subject, text }) => {
+//     const mailOptions = {
+//         from: process.env.GMAIL_USER,
+//         to: to,
+//         subject: subject,
+//         text: text
+//     };
 
-    try {
-        await emailService.transporter.sendMail(mailOptions);
-        console.log('Email đã được gửi đến:', to);
-        return true;
-    } catch (error) {
-        console.error('Lỗi gửi email:', error);
-        throw new Error('Không thể gửi email');
-    }
-};
+//     try {
+//         await emailService.transporter.sendMail(mailOptions);
+//         console.log('Email đã được gửi đến:', to);
+//         return true;
+//     } catch (error) {
+//         console.error('Lỗi gửi email:', error);
+//         throw new Error('Không thể gửi email');
+//     }
+// };

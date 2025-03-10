@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/postgresql/user.model.js';
-import { sendEmail } from '../utils/email.js';
+import { emailService } from '../utils/email.js';
 import dotenv from 'dotenv';
+import { validateRegisterData, validateLoginData, validateEmailOnly, validatePasswordReset } from '../utils/validation.js';
 
 dotenv.config();
 
@@ -10,26 +11,30 @@ class AuthController {
   async register(req, res) {
     try {
       const { email, password, username, full_name } = req.body;
-      
-      // Kiểm tra dữ liệu đầu vào
-      if (!email || !password || !username) {
-        return res.status(400).json({ message: 'Email, password và username là bắt buộc' });
+
+      // Sử dụng validation
+      const validation = validateRegisterData({ email, password, username });
+      if (!validation.isValid) {
+        return res.status(400).json({ 
+          message: 'Dữ liệu không hợp lệ',
+          errors: validation.errors 
+        });
       }
-      
+
       const existingUser = await UserModel.findByEmail(email);
       if (existingUser) {
         return res.status(400).json({ message: 'Email đã được sử dụng' });
       }
-      
+
       console.log('Creating user with data:', { email, username, full_name }); // Log để debug
-      
+
       const user = await UserModel.createUser({
         email,
         password,
         username,
         full_name,
       });
-      
+
       //Verification token
       const verificationToken = jwt.sign(
         { userId: user.id },
@@ -37,11 +42,7 @@ class AuthController {
         { expiresIn: '24h' }
       );
       //Send verification email
-      await sendEmail({
-        to: email,
-        subject: 'Xác thực tài khoản',
-        text: `Click vào link sau để xác thực: ${process.env.FRONTEND_URL}/verify-email/${verificationToken}`,
-      });
+      await emailService.sendVerificationEmail(email, verificationToken);
       res.status(201).json({
         message: 'Đăng ký thành công',
         user: {
@@ -57,9 +58,20 @@ class AuthController {
       res.status(500).json({ message: error.message });
     }
   }
+  
   async login(req, res) {
     try {
       const { email, password } = req.body;
+      
+      // Sử dụng validation
+      const validation = validateLoginData({ email, password });
+      if (!validation.isValid) {
+        return res.status(400).json({ 
+          message: 'Dữ liệu không hợp lệ',
+          errors: validation.errors 
+        });
+      }
+      
       const user = await UserModel.findByEmail(email);
 
       if (!user) {
@@ -98,11 +110,12 @@ class AuthController {
       res.status(500).json({ message: error.message });
     }
   }
+  
   async verifyEmail(req, res) {
     try {
       const { token } = req.params;
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      
+
       const user = await UserModel.findById(decoded.userId);
       if (!user) {
         return res.status(404).json({ message: 'Người dùng không tồn tại' });
@@ -114,57 +127,83 @@ class AuthController {
       res.status(400).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
     }
   }
+  
   async sendVerificationEmail(req, res) {
     try {
       const { email } = req.body;
-      const user = await UserModel.findByEmail(email);
       
+      // Sử dụng validation
+      const validation = validateEmailOnly({ email });
+      if (!validation.isValid) {
+        return res.status(400).json({ 
+          message: 'Dữ liệu không hợp lệ',
+          errors: validation.errors 
+        });
+      }
+      
+      const user = await UserModel.findByEmail(email);
+
       if (!user) {
         return res.status(404).json({ message: 'Email không tồn tại' });
       }
-      
+
       const verificationToken = jwt.sign(
         { userId: user.id },
         process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
-      
-      await sendEmail({
-        to: email,
-        subject: 'Xác thực tài khoản',
-        text: `Click vào link sau để xác thực: ${process.env.FRONTEND_URL}/verify-email/${verificationToken}`,
-      });
-      
+      await emailService.sendVerificationEmail(email, verificationToken);
       res.json({ message: 'Email xác thực đã được gửi' });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   }
+  
   async findAccount(req, res) {
     try {
       const { email } = req.body;
-      const user = await UserModel.findByEmail(email);
       
+      // Sử dụng validation
+      const validation = validateEmailOnly({ email });
+      if (!validation.isValid) {
+        return res.status(400).json({ 
+          message: 'Dữ liệu không hợp lệ',
+          errors: validation.errors 
+        });
+      }
+      
+      const user = await UserModel.findByEmail(email);
+
       if (!user) {
         return res.status(404).json({ message: 'Không tìm thấy tài khoản' });
       }
 
-      res.json({ 
+      res.json({
         user: {
           id: user.id,
           email: user.email,
           username: user.username,
-          full_name: user.full_name
-        }
+          full_name: user.full_name,
+        },
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   }
+  
   async resetPassword(req, res) {
     try {
       const { userId } = req.params;
       const { password } = req.body;
+      
+      // Sử dụng validation
+      const validation = validatePasswordReset({ password });
+      if (!validation.isValid) {
+        return res.status(400).json({ 
+          message: 'Dữ liệu không hợp lệ',
+          errors: validation.errors 
+        });
+      }
 
       const hashedPassword = await bcrypt.hash(password, 10);
       await UserModel.updatePassword(userId, hashedPassword);
@@ -186,12 +225,12 @@ class AuthController {
   async deleteAccount(req, res) {
     try {
       const userId = req.user.id; // Lấy từ middleware xác thực
-      
+
       const deletedUser = await UserModel.softDeleteUser(userId);
       if (!deletedUser) {
         return res.status(404).json({ message: 'Người dùng không tồn tại' });
       }
-      
+
       res.json({ message: 'Tài khoản đã được xóa thành công' });
     } catch (error) {
       console.error('Delete account error:', error);
@@ -201,20 +240,20 @@ class AuthController {
   async restoreAccount(req, res) {
     try {
       const { userId } = req.params;
-      
+
       const restoredUser = await UserModel.restoreUser(userId);
       if (!restoredUser) {
         return res.status(404).json({ message: 'Người dùng không tồn tại' });
       }
-      
-      res.json({ 
+
+      res.json({
         message: 'Tài khoản đã được khôi phục thành công',
         user: {
           id: restoredUser.id,
           email: restoredUser.email,
           username: restoredUser.username,
-          full_name: restoredUser.full_name
-        }
+          full_name: restoredUser.full_name,
+        },
       });
     } catch (error) {
       console.error('Restore account error:', error);
@@ -224,12 +263,12 @@ class AuthController {
   async permanentlyDeleteAccount(req, res) {
     try {
       const { userId } = req.params;
-      
+
       const deletedUser = await UserModel.permanentlyDeleteUser(userId);
       if (!deletedUser) {
         return res.status(404).json({ message: 'Người dùng không tồn tại' });
       }
-      
+
       res.json({ message: 'Tài khoản đã được xóa vĩnh viễn' });
     } catch (error) {
       console.error('Permanently delete account error:', error);

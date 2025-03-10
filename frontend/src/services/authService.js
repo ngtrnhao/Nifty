@@ -59,7 +59,7 @@ export const authService = {
   },
   sendVerificationEmail: async (email) => {
     try {
-      const response = await api.post('auth/send-verification', { email });
+      const response = await api.post('/auth/send-verification', { email });
       return response.data;
     } catch (error) {
       throw error.response.data;

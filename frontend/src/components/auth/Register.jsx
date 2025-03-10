@@ -36,7 +36,8 @@ const Register = () => {
       return;
     }
     try {
-      await dispatch(registerUser(formData)).unwrap();
+      const response = await dispatch(registerUser(formData)).unwrap();
+      dispatch({ type: 'auth/setEmail', payload: formData.email });
       await dispatch(sendVerificationEmail(formData.email)).unwrap();
       toast.success('Đăng ký thành công');
       navigate('/check-email');

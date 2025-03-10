@@ -60,7 +60,7 @@ export const googleLogin = createAsyncThunk(
   }
 );
 export const sendVerificationEmail = createAsyncThunk(
-  '/auth/sendVerificationEmail',
+  'auth/sendVerificationEmail',
   async (email, { rejectWithValue }) => {
     try {
       const response = await authService.sendVerificationEmail(email);
@@ -92,6 +92,7 @@ const initialState = {
   emailVerified: false,
   verificationEmailSent: false,
   verificationError: null,
+  email: null,
 };
 
 const authSlice = createSlice({
