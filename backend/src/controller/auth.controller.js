@@ -3,7 +3,11 @@ import bcrypt from 'bcrypt';
 import UserModel from '../models/postgresql/user.model.js';
 import { emailService } from '../utils/email.js';
 import dotenv from 'dotenv';
-import { validateRegisterData } from '../utils/validation.js';
+import {
+  validateRegisterData,
+  validateLoginData,
+  validateEmailOnly,
+} from '../utils/validation.js';
 
 dotenv.config();
 
